@@ -1,0 +1,73 @@
+<% if @userbooks.exists? %>
+
+  <% if @userbook == 1 %>
+
+    <h2>Users</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>image</th>
+          <th>name</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @userbooks.each do |user|%>
+          <tr>
+            <td><%= attachment_image_tag user, :profile_image, :fill, 60, 60, fallback: "person.jpg", size:'60x60' %></td>
+            <td><%= user.name %></td>
+            <td>
+              フォロー数：<%= user.followings.count %>
+            </td>
+            <td>
+              フォロワー数：<%= user.followers.count %>
+            </td>
+            <td>
+              <% unless current_user.id == user.id %>
+                <% if current_user.following?(user) %>
+                  <%= link_to "フォロー外す", user_relationship_path(user_id: user.id, id: current_user.id), method: :delete %>
+                <% else %>
+                  <%= link_to "フォローする", user_relationships_path(user_id: user.id, id: current_user.id), method: :post %>
+                <% end %>
+              <% end %>
+            </td>
+            <td><%= link_to "Show",usershow_path(user.id) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% else %>
+
+    <h2>Books</h2>
+    <table class="table table-hover table-inverse">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Title</th>
+          <th>Opinion</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @userbooks.each do |book|%>
+          <tr>
+            <td>
+              <%= link_to (attachment_image_tag book.user, :profile_image, :fill, 60, 60, fallback: "person.jpg", size:'60x60'), usershow_path(book.user.id) %>
+            </td>
+            <td><%= link_to book.title,bookshow_path(book.id)  %></td>
+            <td><%= book.body %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% end %>
+
+<% else %>
+
+  <h2>該当しませんでした。</h2>
+
+<% end %>

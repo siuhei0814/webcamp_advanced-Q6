@@ -1,0 +1,5 @@
+$(".book_comments").html("<%= j(render 'book_comments/book-comment',book_comments: @book_comments) %>");
+
+$("textarea").val('')
+
+$(".comment_num").html("<%= j(render "book_comments/comment-num",book_comments: @book_comments) %>");
